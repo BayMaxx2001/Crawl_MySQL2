@@ -1,21 +1,33 @@
-# Task 1: Crawl Data
+
+# Task 3
 ## Problem
-1. Request https://malshare.com/daily  
-2. Save all information in this link to your device.
+1. Request https://malshare.com/daily
+2. Use goroutines to speed up performance
+3. Save all information in this link to the database
 
 ## Getting Started
-First, we must installation Goquerry.
+ 1. Install MySQL and MySQL WorkBench
+ 2. Configure features in file `config/sample_config.json` the following format: 
+	 ```
+	 { 
+		 "DB_USERNAME": <YOUR_USERNAME>,
+		 "DB_PASSWORD": <YOUR_PASSWORD>,
+		 "DB_PORT": "3306",
+		 "DB_HOST": "127.0.0.1",
+		 "DB_NAME": "malshareDB"
+	 }
+	 ```
+ 3. We must install package: `tkanos/gonfig`,  `PuerkitoBio/goquery`, `go-sql-driver/mysql` by the following:
 ```
 go get github.com/PuerkitoBio/goquery
+go get github.com/go-sql-driver/mysql
+go get github.com/tkanos/gonfig
 ```
-Second, run file `main.go` crawl data to your device.
-```
-go run main.go
-```
+ 4. Use command:  ``` go run main.go ```  download data to the database
+
 ## Steps
 1. Request to https://malshare.com/daily.
 2. Extract HTML response and get date data by get element table -> tr -> td.
 3. Classify data is the md5, sha1,sha256 save to map.
-4. Create and write the file.
-
-*Note: Because the data set is too big, `output` example as the first 5 days.*
+4. Design goroutines to run concurrently
+5. Save to database 
