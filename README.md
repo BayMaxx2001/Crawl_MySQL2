@@ -24,7 +24,8 @@ go get github.com/go-sql-driver/mysql
 go get github.com/tkanos/gonfig
 ```
  4. Use command:  ``` console 
- 		go run main.go ```  download data to the database
+ 		go run main.go 
+		```  download data to the database
 
 ## Steps
 1. Request to https://malshare.com/daily.
