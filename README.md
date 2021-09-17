@@ -18,7 +18,7 @@
 	 }
 	 ```
  3. We must install package: `tkanos/gonfig`,  `PuerkitoBio/goquery`, `go-sql-driver/mysql` by the following:
-```
+``` console
 go get github.com/PuerkitoBio/goquery
 go get github.com/go-sql-driver/mysql
 go get github.com/tkanos/gonfig
