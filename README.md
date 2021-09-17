@@ -8,7 +8,7 @@
 ## Getting Started
  1. Install MySQL and MySQL WorkBench
  2. Configure features in file `config/sample_config.json` the following format: 
-	 ```
+	 ``` json
 	 { 
 		 "DB_USERNAME": <YOUR_USERNAME>,
 		 "DB_PASSWORD": <YOUR_PASSWORD>,
