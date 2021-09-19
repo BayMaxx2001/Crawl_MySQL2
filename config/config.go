@@ -16,7 +16,7 @@ type Configuration struct {
 
 func GetConfig(params ...string) Configuration {
 	configuration := Configuration{}
-	env := "sample"
+	env := "dev"
 	if len(params) > 0 {
 		env = params[0]
 	}

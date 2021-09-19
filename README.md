@@ -6,8 +6,9 @@
 3. Save all information in this link to the database
 
 ## Getting Started
- 1. Install MySQL and MySQL WorkBench
- 2. Configure features in file `config/sample_config.json` the following format: 
+ 1. Install MySQL and optional install MySQL WorkBench to easy use. 
+ 2. Create file `dev_config.json` in folder `config`  
+ 2. Configure features in file `config/dev_config.json` the following format: 
 	 ``` json
 	 { 
 		 "DB_USERNAME": <YOUR_USERNAME>,
