@@ -26,6 +26,7 @@ func DSN(dbName string) string {
 }
 
 func ConnectToDatabase(dbName string) (*sql.DB, error) {
+
 	DSN := DSN(dbName)
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
@@ -39,17 +40,18 @@ func ConnectToDatabase(dbName string) (*sql.DB, error) {
 	return db, err
 }
 
-func CreateDatabase(dbName string, db *sql.DB) (*sql.DB, error) {
+func CreateDatabase(dbName string, db *sql.DB) error {
+
 	query := "CREATE DATABASE IF NOT EXISTS " + dbName
 	_, err := db.Exec(query)
 	if err != nil {
 		log.Println("Error at CreateDatabase of database/database.go ", err)
-		return db, err
+		return err
 	}
-	return db, err
+	return err
 }
 
-func CreateTable(tableName string, db *sql.DB) (*sql.DB, error) {
+func CreateTable(tableName string, db *sql.DB) error {
 
 	queryInforTbl := `
 	CREATE TABLE IF NOT EXISTS INFORMATION (
@@ -62,16 +64,16 @@ func CreateTable(tableName string, db *sql.DB) (*sql.DB, error) {
 	`
 	return ExecQueryDatabase(queryInforTbl, db)
 }
-func ExecQueryDatabase(query string, db *sql.DB) (*sql.DB, error) {
+func ExecQueryDatabase(query string, db *sql.DB) error {
 	_, err := db.Exec(query)
 	if err != nil {
 		log.Println("Error at ExecQueryDatabase of database/database.go ", err)
-		return db, err
+		return err
 	}
-	return db, err
+	return err
 }
 
-func InsertInformationTbl(dbName string, infor entities.InformationTbl, db *sql.DB) (*sql.DB, error) {
+func InsertInformationTbl(dbName string, infor entities.InformationTbl, db *sql.DB) error {
 	// prepare
 	query := `
 		INSERT INTO ` + dbName + `.INFORMATION(Date, Type, LineID, Information) 
@@ -80,17 +82,17 @@ func InsertInformationTbl(dbName string, infor entities.InformationTbl, db *sql.
 	stmt, err := db.Prepare(query)
 	if err != nil {
 		log.Println("Error at InsertInformationTbl of database/database.go when prepare statement ", err)
-		return db, err
+		return err
 	}
 	defer stmt.Close()
 
 	if _, err := stmt.Exec(infor.Date, infor.Type, infor.LineID, infor.Information); err != nil {
 		log.Println("Error at InsertInformationTbl of database/database.go when execute", err)
-		return db, err
+		return err
 	}
 
 	log.Println("Insert " + infor.Date + " into InformationTbl successfully.")
-	return db, err
+	return err
 }
 
 func SaveToDatabase(date string, format string, content []model.PageInformation, dbName string, db *sql.DB) {
@@ -99,7 +101,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 	if format == "MD5" {
 		for id, infor := range content {
 			var newRow = entities.NewInformationTbl(date, "MD5", id+1, infor.MD5)
-			if _, err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert MD5 at SaveToDatabase of database/database.go ", err)
 			}
 		}
@@ -107,7 +109,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 	if format == "SHA1" {
 		for id, infor := range content {
 			var newRow = entities.NewInformationTbl(date, "SHA1", id+1, infor.SHA1)
-			if _, err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert SHA1 at SaveToDatabase of database/database.go ", err)
 			}
 		}
@@ -115,7 +117,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 	if format == "SHA256" {
 		for id, infor := range content {
 			var newRow = entities.NewInformationTbl(date, "SHA256", id+1, infor.SHA256)
-			if _, err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert SHA256 at SaveToDatabase of database/database.go ", err)
 			}
 		}

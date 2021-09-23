@@ -83,29 +83,37 @@ func crawlData(dbName string, db *sql.DB) {
 
 func connectDBAndCreateTBL() *sql.DB {
 	var dbName = config.GetConfig().DB_NAME
+	var db *sql.DB
+	var err error
 	// Connect to MySQL
-	db, err := database.ConnectToDatabase("")
+	db, err = database.ConnectToDatabase("")
 	checkError("Connect to MySql at connectDBAndCreateTBL of crawlData/main.go", err)
-
 	// Create database
-	db, err = database.CreateDatabase(dbName, db)
+	err = database.CreateDatabase(dbName, db)
 	checkError("Create database:"+dbName+" at connectDBAndCreateTBL of crawlData/main.go", err)
 	// Connect to database
 	db, err = database.ConnectToDatabase(dbName)
 	checkError("Connect to database:"+dbName+" at connectDBAndCreateTBL of crawlData/main.go", err)
 
 	// Create table in database
-	db, err = database.CreateTable("INFORMATION", db)
+	err = database.CreateTable("INFORMATION", db)
 	checkError("Create table INFORMATION at connectDBAndCreateTBL of crawlData/main.go", err)
 
 	return db
 }
 
-func main() {
-	var dbName = config.GetConfig().DB_NAME
-	start := time.Now()
+func setupDB() *sql.DB {
 	// Crawl data into the database
 	db := connectDBAndCreateTBL()
+	return db
+}
+func operateProgram(db *sql.DB) {
+	var dbName = config.GetConfig().DB_NAME
 	crawlData(dbName, db)
+}
+func main() {
+	start := time.Now()
+	db := setupDB()
+	operateProgram(db)
 	fmt.Println("Time to run program: ", time.Since(start))
 }

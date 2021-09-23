@@ -14,12 +14,9 @@ type Configuration struct {
 	DB_NAME     string
 }
 
-func GetConfig(params ...string) Configuration {
+func GetConfig() Configuration {
 	configuration := Configuration{}
 	env := "dev"
-	if len(params) > 0 {
-		env = params[0]
-	}
 	fileName := fmt.Sprintf("./config/%s_config.json", env)
 	gonfig.GetConf(fileName, &configuration)
 	return configuration
