@@ -99,7 +99,6 @@ func connectDBAndCreateTBL() *sql.DB {
 	// Create table in database
 	err = database.CreateTable("INFORMATION", db)
 	checkError("Create table INFORMATION at connectDBAndCreateTBL of crawlData/main.go", err)
-
 	return db
 }
 
