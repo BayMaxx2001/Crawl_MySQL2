@@ -12,7 +12,7 @@ func GetRowSelect(res *sql.Rows) (entities.StorageInforTbl, error) {
 	var inforReturn entities.StorageInforTbl
 	for res.Next() {
 		var infor entities.StorageInforTbl
-		err := res.Scan(&infor.Date, &infor.LineID, &infor.Type, &infor.HashCode)
+		err := res.Scan(&infor.Date, &infor.Type, &infor.LineID, &infor.HashCode)
 		if err != nil {
 			log.Println("Error at GetRowSelect of database/query.go", err)
 			return inforReturn, err
