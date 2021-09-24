@@ -5,7 +5,6 @@ import (
 	"crawl_data/database/entities"
 	"crawl_data/model"
 	"crawl_data/utils"
-
 	"database/sql"
 	"fmt"
 	"log"
@@ -52,18 +51,19 @@ func CreateDatabase(dbName string, db *sql.DB) error {
 }
 
 func CreateTable(tableName string, db *sql.DB) error {
-
 	queryInforTbl := `
-	CREATE TABLE IF NOT EXISTS INFORMATION (
+	CREATE TABLE IF NOT EXISTS StorageInfor (
 		Date        DATE NOT NULL,
+		Type        NVARCHAR(10) NOT NULL,
 		LineID    	INT NOT NULL,
-		Type        nvarchar(10) not null,
-		Information TEXT NOT NULL,
-		PRIMARY KEY(DATE, Type, LineID)
+		HashCode    TEXT NOT NULL,
+		PRIMARY KEY(DATE, Type, LineID),
+		INDEX (Date,HashCode(256))
 	);
 	`
 	return ExecQueryDatabase(queryInforTbl, db)
 }
+
 func ExecQueryDatabase(query string, db *sql.DB) error {
 	_, err := db.Exec(query)
 	if err != nil {
@@ -73,51 +73,67 @@ func ExecQueryDatabase(query string, db *sql.DB) error {
 	return err
 }
 
-func InsertInformationTbl(dbName string, infor entities.InformationTbl, db *sql.DB) error {
+func InsertStorageInforTbl(dbName string, infor entities.StorageInforTbl, db *sql.DB) error {
 	// prepare
 	query := `
-		INSERT INTO ` + dbName + `.INFORMATION(Date, Type, LineID, Information) 
+		INSERT INTO ` + dbName + `.StorageInfor(Date, Type, LineID, HashCode) 
 		VALUES (?, ?, ?, ?)
 	`
 	stmt, err := db.Prepare(query)
 	if err != nil {
-		log.Println("Error at InsertInformationTbl of database/database.go when prepare statement ", err)
+		log.Println("Error at InsertStorageInforTbl of database/database.go when prepare statement ", err)
 		return err
 	}
 	defer stmt.Close()
 
-	if _, err := stmt.Exec(infor.Date, infor.Type, infor.LineID, infor.Information); err != nil {
-		log.Println("Error at InsertInformationTbl of database/database.go when execute", err)
+	if _, err := stmt.Exec(infor.Date, infor.Type, infor.LineID, infor.HashCode); err != nil {
+		log.Println("Error at InsertStorageInforTbl of database/database.go when execute", err)
 		return err
 	}
 
-	log.Println("Insert " + infor.Date + " into InformationTbl successfully.")
+	log.Println("Insert " + infor.Date + " into InsertStorageInforTbl successfully.")
 	return err
 }
 
+func IsExist(date string, hashCode string, db *sql.DB) bool {
+	info, err := SelectByDateAndInfor(date, hashCode, db)
+	if err != nil {
+		log.Println("Error IsExist of database/database.go", err)
+	}
+	return (info.Date != "" && info.HashCode != "")
+}
 func SaveToDatabase(date string, format string, content []model.PageInformation, dbName string, db *sql.DB) {
 	year, month, day := utils.GetDateDetail(date)
 	date = year + "-" + month + "-" + day
 	if format == "MD5" {
 		for id, infor := range content {
-			var newRow = entities.NewInformationTbl(date, "MD5", id+1, infor.MD5)
-			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if IsExist(date, infor.MD5, db) || infor.MD5 == "" {
+				continue
+			}
+			var newRow = entities.NewInfor(date, "MD5", id+1, infor.MD5)
+			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert MD5 at SaveToDatabase of database/database.go ", err)
 			}
 		}
 	}
 	if format == "SHA1" {
 		for id, infor := range content {
-			var newRow = entities.NewInformationTbl(date, "SHA1", id+1, infor.SHA1)
-			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if IsExist(date, infor.SHA1, db) || infor.SHA1 == "" {
+				continue
+			}
+			var newRow = entities.NewInfor(date, "SHA1", id+1, infor.SHA1)
+			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert SHA1 at SaveToDatabase of database/database.go ", err)
 			}
 		}
 	}
 	if format == "SHA256" {
 		for id, infor := range content {
-			var newRow = entities.NewInformationTbl(date, "SHA256", id+1, infor.SHA256)
-			if err := InsertInformationTbl(dbName, newRow, db); err != nil {
+			if IsExist(date, infor.SHA256, db) || infor.SHA256 == "" {
+				continue
+			}
+			var newRow = entities.NewInfor(date, "SHA256", id+1, infor.SHA256)
+			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
 				log.Println("Error insert SHA256 at SaveToDatabase of database/database.go ", err)
 			}
 		}

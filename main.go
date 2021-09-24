@@ -82,9 +82,11 @@ func crawlData(dbName string, db *sql.DB) {
 }
 
 func connectDBAndCreateTBL() *sql.DB {
-	var dbName = config.GetConfig().DB_NAME
-	var db *sql.DB
-	var err error
+	var (
+		dbName = config.GetConfig().DB_NAME
+		db     *sql.DB
+		err    error
+	)
 	// Connect to MySQL
 	db, err = database.ConnectToDatabase("")
 	checkError("Connect to MySql at connectDBAndCreateTBL of crawlData/main.go", err)
@@ -94,7 +96,6 @@ func connectDBAndCreateTBL() *sql.DB {
 	// Connect to database
 	db, err = database.ConnectToDatabase(dbName)
 	checkError("Connect to database:"+dbName+" at connectDBAndCreateTBL of crawlData/main.go", err)
-
 	// Create table in database
 	err = database.CreateTable("INFORMATION", db)
 	checkError("Create table INFORMATION at connectDBAndCreateTBL of crawlData/main.go", err)
@@ -107,10 +108,12 @@ func setupDB() *sql.DB {
 	db := connectDBAndCreateTBL()
 	return db
 }
+
 func operateProgram(db *sql.DB) {
 	var dbName = config.GetConfig().DB_NAME
 	crawlData(dbName, db)
 }
+
 func main() {
 	start := time.Now()
 	db := setupDB()
