@@ -102,6 +102,7 @@ func IsExist(date string, hashCode string, db *sql.DB) bool {
 	}
 	return (info.Date != "" && info.HashCode != "")
 }
+
 func SaveToDatabase(date string, format string, content []model.PageInformation, dbName string, db *sql.DB) {
 	year, month, day := utils.GetDateDetail(date)
 	date = year + "-" + month + "-" + day

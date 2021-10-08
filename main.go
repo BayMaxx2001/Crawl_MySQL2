@@ -1,12 +1,14 @@
 package main
 
 import (
+	"crawl_data/api"
 	"crawl_data/config"
 	"crawl_data/database"
 	"crawl_data/model"
 	"crawl_data/page"
 	"crawl_data/utils"
 	"fmt"
+	"net/http"
 	"time"
 
 	"database/sql"
@@ -103,7 +105,6 @@ func connectDBAndCreateTBL() *sql.DB {
 }
 
 func setupDB() *sql.DB {
-	// Crawl data into the database
 	db := connectDBAndCreateTBL()
 	return db
 }
@@ -112,10 +113,22 @@ func operateProgram(db *sql.DB) {
 	var dbName = config.GetConfig().DB_NAME
 	crawlData(dbName, db)
 }
+func writeAPI() {
+	// listDate, err := utils.GetListDate(url)
+	// fmt.Println(listDate[0])
+	// if err != nil {
+	// 	log.Println()
+	// }
+	//2017-09-14
+	http.HandleFunc("/get-number-infor-day/", api.GetNumberInforADayAPI)
+	http.HandleFunc("/get-infor/", api.SelectByDateAPI)
 
+}
 func main() {
 	start := time.Now()
-	db := setupDB()
-	operateProgram(db)
+	//db := setupDB()
+	//operateProgram(db)
+	writeAPI()
+	log.Fatal(http.ListenAndServe(":8080", nil))
 	fmt.Println("Time to run program: ", time.Since(start))
 }
