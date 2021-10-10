@@ -66,7 +66,7 @@ func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error ConnectToDatabase at SelectByDate of api/api.go", err)
+		log.Println("Error ConnectToDatabase at SelectByDate of database/query.go", err)
 	}
 
 	query := `
@@ -95,7 +95,7 @@ func GetNumberADayDB(date string) (int, error) {
 	)
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error at ConnectToDatabase of GetNumberADay of api/api.go", err)
+		log.Println("Error at ConnectToDatabase of GetNumberADay of database/query.go", err)
 	}
 	query := `
 		SELECT count(*) as num
@@ -119,7 +119,7 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of api/api.go", err)
+		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of database/query.go", err)
 	}
 	query := `
 		SELECT Date , Type
