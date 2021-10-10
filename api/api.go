@@ -2,16 +2,15 @@ package api
 
 import (
 	"crawl_data/database"
-	"crawl_data/database/entities"
 	"encoding/json"
 	"log"
 	"net/http"
 )
 
 func getDateInParam(w http.ResponseWriter, r *http.Request) string {
-	date, ok := r.URL.Query()["date"]
+	date, check := r.URL.Query()["date"]
 
-	if !ok || len(date[0]) < 1 {
+	if !check || len(date[0]) < 1 {
 		log.Println("Url Param 'date' is missing")
 		json.NewEncoder(w).Encode("Url Param 'date' is missing")
 		return ""
@@ -19,6 +18,18 @@ func getDateInParam(w http.ResponseWriter, r *http.Request) string {
 	log.Println(date[0])
 	return date[0]
 }
+func getHashCodeInParam(w http.ResponseWriter, r *http.Request) string {
+	hashCode, check := r.URL.Query()["hashcode"]
+
+	if !check || len(hashCode[0]) < 1 {
+		log.Println("Url Param 'hashCode' is missing")
+		json.NewEncoder(w).Encode("Url Param 'hashCode' is missing")
+		return ""
+	}
+	log.Println(hashCode[0])
+	return hashCode[0]
+}
+
 func GetNumberInforADayAPI(w http.ResponseWriter, r *http.Request) {
 	date := getDateInParam(w, r)
 	number, err := database.GetNumberADayDB(date)
@@ -38,7 +49,12 @@ func SelectByDateAPI(w http.ResponseWriter, r *http.Request) {
 	}
 	json.NewEncoder(w).Encode(listHashCode)
 }
-func TestAPI(w http.ResponseWriter, r *http.Request) {
-	a := entities.NewInfor("2020", "md5", 1, "123")
-	json.NewEncoder(w).Encode(a)
+func SelectByHashCodeAPI(w http.ResponseWriter, r *http.Request) {
+	hashCode := getHashCodeInParam(w, r)
+	lsDate, err := database.SelectByHashCodeDB(hashCode)
+	if err != nil {
+		log.Println("Error at SelectByHashCodeAPI of api/api.go", err)
+		json.NewEncoder(w).Encode(nil)
+	}
+	json.NewEncoder(w).Encode(lsDate)
 }

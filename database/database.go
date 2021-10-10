@@ -100,7 +100,7 @@ func IsExist(date string, hashCode string, db *sql.DB) bool {
 	if err != nil {
 		log.Println("Error IsExist of database/database.go", err)
 	}
-	return (info.Date != "" && info.HashCode != "")
+	return (info[0].Date != "" && info[0].HashCode != "")
 }
 
 func SaveToDatabase(date string, format string, content []model.PageInformation, dbName string, db *sql.DB) {

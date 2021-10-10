@@ -109,25 +109,19 @@ func setupDB() *sql.DB {
 	return db
 }
 
-func operateProgram(db *sql.DB) {
+func initDB(db *sql.DB) {
 	var dbName = config.GetConfig().DB_NAME
 	crawlData(dbName, db)
 }
 func writeAPI() {
-	// listDate, err := utils.GetListDate(url)
-	// fmt.Println(listDate[0])
-	// if err != nil {
-	// 	log.Println()
-	// }
-	//2017-09-14
 	http.HandleFunc("/get-number-infor-day/", api.GetNumberInforADayAPI)
 	http.HandleFunc("/get-infor/", api.SelectByDateAPI)
-
+	http.HandleFunc("/get-date/", api.SelectByHashCodeAPI)
 }
 func main() {
 	start := time.Now()
-	//db := setupDB()
-	//operateProgram(db)
+	db := setupDB()
+	initDB(db)
 	writeAPI()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 	fmt.Println("Time to run program: ", time.Since(start))

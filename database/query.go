@@ -8,24 +8,28 @@ import (
 	"log"
 )
 
-func GetRowSelect(res *sql.Rows) (entities.StorageInforTbl, error) {
-	var inforReturn entities.StorageInforTbl
+func GetRowSelect(res *sql.Rows) ([]entities.StorageInforTbl, error) {
+	var (
+		inforReturn   entities.StorageInforTbl
+		lsInforReturn []entities.StorageInforTbl
+	)
 	for res.Next() {
 		var infor entities.StorageInforTbl
 		err := res.Scan(&infor.Date, &infor.Type, &infor.LineID, &infor.HashCode)
 		if err != nil {
 			log.Println("Error at GetRowSelect of database/query.go", err)
-			return inforReturn, err
+			return lsInforReturn, err
 		}
 		inforReturn = entities.NewInfor(infor.Date, infor.Type, infor.LineID, infor.HashCode)
+		lsInforReturn = append(lsInforReturn, inforReturn)
 	}
-	return inforReturn, nil
+	return lsInforReturn, nil
 }
 
-func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) (entities.StorageInforTbl, error) {
+func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.StorageInforTbl, error) {
 	var (
-		dbName      = config.GetConfig().DB_NAME
-		inforReturn entities.StorageInforTbl
+		dbName        = config.GetConfig().DB_NAME
+		lsInforReturn []entities.StorageInforTbl
 	)
 	year, month, day := utils.GetDateDetail(date)
 	date = year + "-" + month + "-" + day
@@ -39,25 +43,25 @@ func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) (entities.St
 	res, err := db.Query(query)
 	if err != nil {
 		log.Println("Error at SelectByDateAndInfor of database/query.go when select", err)
-		return inforReturn, err
+		return lsInforReturn, err
 	}
 
-	if inforReturn, err = GetRowSelect(res); err != nil {
+	if lsInforReturn, err = GetRowSelect(res); err != nil {
 		log.Println("Error at SelectByDateAndInfor of database/query.go when getRowSelect", err)
-		return inforReturn, err
+		return lsInforReturn, err
 	}
-	return inforReturn, nil
+	return lsInforReturn, nil
 }
 
-func SelectByDateDB(date string) (entities.StorageInforTbl, error) {
+func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 	var (
-		dbName      = config.GetConfig().DB_NAME
-		inforReturn entities.StorageInforTbl
+		dbName        = config.GetConfig().DB_NAME
+		lsInforReturn []entities.StorageInforTbl
 	)
 
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error at SelectByDate of api/api.go", err)
+		log.Println("Error ConnectToDatabase at SelectByDate of api/api.go", err)
 	}
 
 	query := `
@@ -69,14 +73,14 @@ func SelectByDateDB(date string) (entities.StorageInforTbl, error) {
 	res, err := db.Query(query)
 	if err != nil {
 		log.Println("Error at SelectByDate of database/query.go when select", err)
-		return inforReturn, err
+		return lsInforReturn, err
 	}
 
-	if inforReturn, err = GetRowSelect(res); err != nil {
+	if lsInforReturn, err = GetRowSelect(res); err != nil {
 		log.Println("Error at SelectByDate of database/query.go when getRowSelect", err)
-		return inforReturn, err
+		return lsInforReturn, err
 	}
-	return inforReturn, nil
+	return lsInforReturn, nil
 }
 
 func GetNumberADayDB(date string) (int, error) {
@@ -86,7 +90,7 @@ func GetNumberADayDB(date string) (int, error) {
 	)
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error at GetNumberADay of api/api.go", err)
+		log.Println("Error at ConnectToDatabase of GetNumberADay of api/api.go", err)
 	}
 	query := `
 		SELECT count(*) as num
@@ -100,4 +104,35 @@ func GetNumberADayDB(date string) (int, error) {
 		return count, err
 	}
 	return count, nil
+}
+
+func SelectByHashCodeDB(hashCode string) ([]string, error) {
+	var (
+		dbName       = config.GetConfig().DB_NAME
+		lsDateReturn []string
+	)
+	db, err := ConnectToDatabase(dbName)
+	if err != nil {
+		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of api/api.go", err)
+	}
+	query := `
+		SELECT Date
+		FROM ` + dbName + `.StorageInfor st
+		WHERE st.HashCode= '` + hashCode + `'
+	`
+	res, err := db.Query(query)
+	if err != nil {
+		log.Println("Error at SelectByHashCodeDB of database/query.go when select", err)
+		return lsDateReturn, err
+	}
+
+	for res.Next() {
+		var date string
+		err := res.Scan(&date)
+		if err != nil {
+			log.Println("Error at GetRowSelect of database/query.go", err)
+		}
+		lsDateReturn = append(lsDateReturn, date)
+	}
+	return lsDateReturn, nil
 }
