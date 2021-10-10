@@ -115,8 +115,8 @@ func initDB(db *sql.DB) {
 }
 func writeAPI() {
 	http.HandleFunc("/get-number-infor-day/", api.GetNumberInforADayAPI)
-	http.HandleFunc("/get-infor/", api.SelectByDateAPI)
 	http.HandleFunc("/get-date/", api.SelectByHashCodeAPI)
+	http.HandleFunc("/get-list-infor-day/", api.SelectByDateAPI)
 }
 func main() {
 	start := time.Now()
