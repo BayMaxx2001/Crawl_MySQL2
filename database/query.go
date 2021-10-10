@@ -8,6 +8,11 @@ import (
 	"log"
 )
 
+type DateAndType struct {
+	Date string
+	Type string
+}
+
 func GetRowSelect(res *sql.Rows) ([]entities.StorageInforTbl, error) {
 	var (
 		inforReturn   entities.StorageInforTbl
@@ -106,33 +111,37 @@ func GetNumberADayDB(date string) (int, error) {
 	return count, nil
 }
 
-func SelectByHashCodeDB(hashCode string) ([]string, error) {
+func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 	var (
-		dbName       = config.GetConfig().DB_NAME
-		lsDateReturn []string
+		dbName        = config.GetConfig().DB_NAME
+		lsDateAndType []DateAndType
 	)
+
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
 		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of api/api.go", err)
 	}
 	query := `
-		SELECT Date
+		SELECT Date , Type
 		FROM ` + dbName + `.StorageInfor st
 		WHERE st.HashCode= '` + hashCode + `'
 	`
 	res, err := db.Query(query)
 	if err != nil {
 		log.Println("Error at SelectByHashCodeDB of database/query.go when select", err)
-		return lsDateReturn, err
+		return lsDateAndType, err
 	}
 
 	for res.Next() {
-		var date string
-		err := res.Scan(&date)
+		var (
+			date       string
+			typeOfHash string
+		)
+		err := res.Scan(&date, &typeOfHash)
 		if err != nil {
 			log.Println("Error at GetRowSelect of database/query.go", err)
 		}
-		lsDateReturn = append(lsDateReturn, date)
+		lsDateAndType = append(lsDateAndType, DateAndType{date, typeOfHash})
 	}
-	return lsDateReturn, nil
+	return lsDateAndType, nil
 }

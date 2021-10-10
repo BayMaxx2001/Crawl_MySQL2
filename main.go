@@ -121,8 +121,8 @@ func writeAPI() {
 func main() {
 	start := time.Now()
 	db := setupDB()
-	initDB(db)
-	writeAPI()
+	go initDB(db)
+	go writeAPI()
 	log.Fatal(http.ListenAndServe(":8080", nil))
 	fmt.Println("Time to run program: ", time.Since(start))
 }
