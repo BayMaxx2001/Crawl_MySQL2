@@ -24,7 +24,7 @@ func processInformationOfDate(chanDate chan string, chanPageInformation chan []m
 	for date := range chanDate {
 		info, err := page.GetInformationOfDate(date)
 		if err != nil {
-			log.Println("Error at processInformationOfDate of crawlData/main.go ", err)
+			log.Println("Error at processInformationOfDate of crawlData.go ", err)
 			continue
 		}
 		chanPageInformation <- info
@@ -57,7 +57,7 @@ func crawlData(dbName string, db *sql.DB) {
 	)
 	listDate, err = utils.GetListDate(url)
 	if err != nil {
-		log.Panic("Get list date of crawlData/main.go ", err)
+		log.Panic("Get list date of crawlData.go ", err)
 	}
 	go sendDateToChanDate(chanDate, listDate)
 	var wg1, wg2 sync.WaitGroup

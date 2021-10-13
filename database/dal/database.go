@@ -29,7 +29,7 @@ func ConnectToDatabase(dbName string) (*sql.DB, error) {
 	DSN := DSN(dbName)
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
-		log.Println("Error at ConnectToDatabase of database/database.go ", err)
+		log.Println("Error at ConnectToDatabase of database/dal/database.go ", err)
 		return db, err
 	}
 
@@ -43,7 +43,7 @@ func CreateDatabase(dbName string, db *sql.DB) error {
 	query := "CREATE DATABASE IF NOT EXISTS " + dbName
 	_, err := db.Exec(query)
 	if err != nil {
-		log.Println("Error at CreateDatabase of database/database.go ", err)
+		log.Println("Error at CreateDatabase of database/dal/database.go ", err)
 		return err
 	}
 	return err
@@ -66,7 +66,7 @@ func CreateTable(tableName string, db *sql.DB) error {
 func ExecQueryDatabase(query string, db *sql.DB) error {
 	_, err := db.Exec(query)
 	if err != nil {
-		log.Println("Error at ExecQueryDatabase of database/database.go ", err)
+		log.Println("Error at ExecQueryDatabase of database/dal/database.go ", err)
 		return err
 	}
 	return err
@@ -80,13 +80,13 @@ func InsertStorageInforTbl(dbName string, infor entities.StorageInforTbl, db *sq
 	`
 	stmt, err := db.Prepare(query)
 	if err != nil {
-		log.Println("Error at InsertStorageInforTbl of database/database.go when prepare statement ", err)
+		log.Println("Error at InsertStorageInforTbl of database/dal/database.go when prepare statement ", err)
 		return err
 	}
 	defer stmt.Close()
 
 	if _, err := stmt.Exec(infor.Date, infor.Type, infor.LineID, infor.HashCode); err != nil {
-		log.Println("Error at InsertStorageInforTbl of database/database.go when execute", err)
+		log.Println("Error at InsertStorageInforTbl of database/dal/database.go when execute", err)
 		return err
 	}
 
@@ -115,7 +115,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "MD5", id+1, infor.MD5)
 			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert MD5 at SaveToDatabase of database/database.go ", err)
+				log.Println("Error insert MD5 at SaveToDatabase of database/dal/database.go ", err)
 			}
 		}
 	}
@@ -126,7 +126,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "SHA1", id+1, infor.SHA1)
 			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert SHA1 at SaveToDatabase of database/database.go ", err)
+				log.Println("Error insert SHA1 at SaveToDatabase of database/dal/database.go ", err)
 			}
 		}
 	}
@@ -137,7 +137,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "SHA256", id+1, infor.SHA256)
 			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert SHA256 at SaveToDatabase of database/database.go ", err)
+				log.Println("Error insert SHA256 at SaveToDatabase of database/dal/database.go ", err)
 			}
 		}
 	}

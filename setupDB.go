@@ -32,7 +32,7 @@ func createDB() {
 	db = connectMySql()
 	// Create database
 	err = dal.CreateDatabase(dbName, db)
-	checkError("Create database:"+dbName+" at connectDBAndCreateTBL of crawlData/main.go", err)
+	checkError("Create database:"+dbName+" at createDB of setupDB.go", err)
 }
 
 // Create table in database
@@ -44,10 +44,10 @@ func createTable() {
 	)
 	// Connect to database
 	db, err = dal.ConnectToDatabase(dbName)
-	checkError("Connect to database:"+dbName+" at connectDBAndCreateTBL of crawlData/main.go", err)
+	checkError("Connect to database:"+dbName+" at createTable of setupDB.go", err)
 	// Create table in database
 	err = dal.CreateTable("INFORMATION", db)
-	checkError("Create table INFORMATION at connectDBAndCreateTBL of crawlData/main.go", err)
+	checkError("Create table INFORMATION at createTable of setupDB.go", err)
 }
 
 func main() {

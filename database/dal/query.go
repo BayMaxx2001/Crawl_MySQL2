@@ -22,7 +22,7 @@ func GetRowSelect(res *sql.Rows) ([]entities.StorageInforTbl, error) {
 		var infor entities.StorageInforTbl
 		err := res.Scan(&infor.Date, &infor.Type, &infor.LineID, &infor.HashCode)
 		if err != nil {
-			log.Println("Error at GetRowSelect of database/query.go", err)
+			log.Println("Error at GetRowSelect of database/dal/query.go", err)
 			return lsInforReturn, err
 		}
 		inforReturn = entities.NewInfor(infor.Date, infor.Type, infor.LineID, infor.HashCode)
@@ -47,12 +47,12 @@ func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.
 	//log.Println(query)
 	res, err := db.Query(query, date, hashCode)
 	if err != nil {
-		log.Println("Error at SelectByDateAndInfor of database/query.go when select", err)
+		log.Println("Error at SelectByDateAndInfor of database/dal/query.go when select", err)
 		return lsInforReturn, err
 	}
 
 	if lsInforReturn, err = GetRowSelect(res); err != nil {
-		log.Println("Error at SelectByDateAndInfor of database/query.go when getRowSelect", err)
+		log.Println("Error at SelectByDateAndInfor of database/dal/query.go when getRowSelect", err)
 		return lsInforReturn, err
 	}
 	return lsInforReturn, nil
@@ -66,7 +66,7 @@ func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error ConnectToDatabase at SelectByDate of database/query.go", err)
+		log.Println("Error ConnectToDatabase at SelectByDate of database/dal/query.go", err)
 	}
 
 	query := `
@@ -77,25 +77,25 @@ func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 	//log.Println(query)
 	res, err := db.Query(query, date)
 	if err != nil {
-		log.Println("Error at SelectByDate of database/query.go when select", err)
+		log.Println("Error at SelectByDate of database/dal/query.go when select", err)
 		return lsInforReturn, err
 	}
 
 	if lsInforReturn, err = GetRowSelect(res); err != nil {
-		log.Println("Error at SelectByDate of database/query.go when getRowSelect", err)
+		log.Println("Error at SelectByDate of database/dal/query.go when getRowSelect", err)
 		return lsInforReturn, err
 	}
 	return lsInforReturn, nil
 }
 
-func GetNumberADayDB(date string) (int, error) {
+func GetStatisticsADayDB(date string) (int, error) {
 	var (
 		count  int
 		dbName = config.GetConfig().DB_NAME
 	)
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error at ConnectToDatabase of GetNumberADay of database/query.go", err)
+		log.Println("Error at ConnectToDatabase of GetNumberADay of database/dal/query.go", err)
 	}
 	query := `
 		SELECT count(*) as num
@@ -105,7 +105,7 @@ func GetNumberADayDB(date string) (int, error) {
 
 	err = db.QueryRow(query, date).Scan(&count)
 	if err != nil {
-		log.Println("Error at GetNumberADayDB of database/query.go", err)
+		log.Println("Error at GetStatisticsADayDB of database/dal/query.go", err)
 		return count, err
 	}
 	return count, nil
@@ -119,7 +119,7 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 
 	db, err := ConnectToDatabase(dbName)
 	if err != nil {
-		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of database/query.go", err)
+		log.Println("Error ConnectToDatabase at SelectByHashCodeDB of database/dal/query.go", err)
 	}
 	query := `
 		SELECT Date , Type
@@ -128,7 +128,7 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 	`
 	res, err := db.Query(query, hashCode)
 	if err != nil {
-		log.Println("Error at SelectByHashCodeDB of database/query.go when select", err)
+		log.Println("Error at SelectByHashCodeDB of database/dal/query.go when select", err)
 		return lsDateAndType, err
 	}
 
@@ -139,7 +139,7 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 		)
 		err := res.Scan(&date, &typeOfHash)
 		if err != nil {
-			log.Println("Error at GetRowSelect of database/query.go", err)
+			log.Println("Error at GetRowSelect of database/dal/query.go", err)
 		}
 		lsDateAndType = append(lsDateAndType, DateAndType{date, typeOfHash})
 	}

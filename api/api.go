@@ -30,15 +30,16 @@ func getHashCodeInParam(w http.ResponseWriter, r *http.Request) (string, error) 
 	return hashCode[0], nil
 }
 
-func GetNumberInforADayAPI(w http.ResponseWriter, r *http.Request) {
+func GetStatisticsADayAPI(w http.ResponseWriter, r *http.Request) {
 	date, err := getDateInParam(w, r)
 	if err != nil {
+		log.Println(err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
-	number, err := dal.GetNumberADayDB(date)
+	number, err := dal.GetStatisticsADayDB(date)
 	if err != nil {
-		log.Println("Error at GetNumberInforADayAPI of api/api.go", err)
+		log.Println("Error at GetStatisticsADayAPI of api/api.go", err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
@@ -48,6 +49,7 @@ func GetNumberInforADayAPI(w http.ResponseWriter, r *http.Request) {
 func SelectByDateAPI(w http.ResponseWriter, r *http.Request) {
 	date, err := getDateInParam(w, r)
 	if err != nil {
+		log.Println(err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
@@ -62,6 +64,7 @@ func SelectByDateAPI(w http.ResponseWriter, r *http.Request) {
 func SelectByHashCodeAPI(w http.ResponseWriter, r *http.Request) {
 	hashCode, err := getHashCodeInParam(w, r)
 	if err != nil {
+		log.Println(err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}

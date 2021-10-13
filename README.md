@@ -24,12 +24,12 @@ go get github.com/PuerkitoBio/goquery
 go get github.com/go-sql-driver/mysql
 go get github.com/tkanos/gonfig
 ```
- 5. Before running the program, you must set up the database by running the command `go run setupDB`. 
+ 5. Before running the program, you must set up the database by running the command: `go run setupDB`. 
  6. Use command:  `go run crawlData.go` download data to the database
  7. API :
 	* Statistics of the number of samples in 1 day: 
 	```url
-		localhost:8080/get-number-infor-day/?date=<yyyy/mm/dd>
+		localhost:8080/stats-day/?date=<yyyy/mm/dd>
 	```
 	* Search for 1 hash:
 	```url

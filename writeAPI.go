@@ -7,7 +7,7 @@ import (
 )
 
 func writeAPI() {
-	http.HandleFunc("/stats-day/", api.GetNumberInforADayAPI)
+	http.HandleFunc("/stats-day/", api.GetStatisticsADayAPI)
 	http.HandleFunc("/get-date/", api.SelectByHashCodeAPI)
 	http.HandleFunc("/get-list-infor-day/", api.SelectByDateAPI)
 }
