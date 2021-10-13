@@ -1,4 +1,4 @@
-package database
+package dal
 
 import (
 	"crawl_data/config"
@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"log"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 // Data Source Name

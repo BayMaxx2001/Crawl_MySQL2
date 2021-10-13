@@ -1,7 +1,7 @@
 package api
 
 import (
-	"crawl_data/database"
+	"crawl_data/database/dal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -36,7 +36,7 @@ func GetNumberInforADayAPI(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
-	number, err := database.GetNumberADayDB(date)
+	number, err := dal.GetNumberADayDB(date)
 	if err != nil {
 		log.Println("Error at GetNumberInforADayAPI of api/api.go", err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
@@ -51,7 +51,7 @@ func SelectByDateAPI(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
-	listHashCode, err := database.SelectByDateDB(date)
+	listHashCode, err := dal.SelectByDateDB(date)
 	if err != nil {
 		log.Println("Error at SelectByDateAPI of api/api.go", err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
@@ -65,7 +65,7 @@ func SelectByHashCodeAPI(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(fmt.Sprint(err))
 		return
 	}
-	lsDate, err := database.SelectByHashCodeDB(hashCode)
+	lsDate, err := dal.SelectByHashCodeDB(hashCode)
 	if err != nil {
 		log.Println("Error at SelectByHashCodeAPI of api/api.go", err)
 		json.NewEncoder(w).Encode(fmt.Sprint(err))

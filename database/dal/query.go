@@ -1,4 +1,4 @@
-package database
+package dal
 
 import (
 	"crawl_data/config"

@@ -2,7 +2,7 @@ package main
 
 import (
 	"crawl_data/config"
-	"crawl_data/database"
+	"crawl_data/database/dal"
 	"crawl_data/helpers/model"
 	"crawl_data/helpers/page"
 	"crawl_data/helpers/utils"
@@ -39,9 +39,9 @@ func saveOutput(chanPageInformation chan []model.PageInformation, wg *sync.WaitG
 		year := info[0].YEAR
 
 		date := utils.GetDateToString(day, month, year)
-		go database.SaveToDatabase(date, "MD5", info, dbName, db)
-		go database.SaveToDatabase(date, "SHA1", info, dbName, db)
-		go database.SaveToDatabase(date, "SHA256", info, dbName, db)
+		go dal.SaveToDatabase(date, "MD5", info, dbName, db)
+		go dal.SaveToDatabase(date, "SHA1", info, dbName, db)
+		go dal.SaveToDatabase(date, "SHA256", info, dbName, db)
 	}
 	defer wg.Done()
 }
@@ -77,7 +77,7 @@ func crawlData(dbName string, db *sql.DB) {
 func main() {
 	var dbName = config.GetConfig().DB_NAME
 	//connect database
-	db, err := database.ConnectToDatabase(dbName)
+	db, err := dal.ConnectToDatabase(dbName)
 	if err != nil {
 		log.Panic("Error at main of crawlData.go when connect to database")
 	}
