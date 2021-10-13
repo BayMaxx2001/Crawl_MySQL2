@@ -42,10 +42,10 @@ func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.
 	query := `
 		SELECT *
 		FROM ` + dbName + `.StorageInfor st
-		WHERE st.Date = '` + date + `' AND st.HashCode= '` + hashCode + `'
+		WHERE st.Date = ? AND st.HashCode= ?
 	`
 	//log.Println(query)
-	res, err := db.Query(query)
+	res, err := db.Query(query, date, hashCode)
 	if err != nil {
 		log.Println("Error at SelectByDateAndInfor of database/query.go when select", err)
 		return lsInforReturn, err
@@ -72,10 +72,10 @@ func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 	query := `
 		SELECT *
 		FROM ` + dbName + `.StorageInfor st
-		WHERE st.Date = '` + date + `'
+		WHERE st.Date = ?
 	`
 	//log.Println(query)
-	res, err := db.Query(query)
+	res, err := db.Query(query, date)
 	if err != nil {
 		log.Println("Error at SelectByDate of database/query.go when select", err)
 		return lsInforReturn, err
@@ -100,10 +100,10 @@ func GetNumberADayDB(date string) (int, error) {
 	query := `
 		SELECT count(*) as num
 		FROM ` + dbName + `.StorageInfor st
-		WHERE st.Date = '` + date + `'
+		WHERE st.Date = ?
 	`
 
-	err = db.QueryRow(query).Scan(&count)
+	err = db.QueryRow(query, date).Scan(&count)
 	if err != nil {
 		log.Println("Error at GetNumberADayDB of database/query.go", err)
 		return count, err
@@ -124,9 +124,9 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 	query := `
 		SELECT Date , Type
 		FROM ` + dbName + `.StorageInfor st
-		WHERE st.HashCode= '` + hashCode + `'
+		WHERE st.HashCode= ?
 	`
-	res, err := db.Query(query)
+	res, err := db.Query(query, hashCode)
 	if err != nil {
 		log.Println("Error at SelectByHashCodeDB of database/query.go when select", err)
 		return lsDateAndType, err

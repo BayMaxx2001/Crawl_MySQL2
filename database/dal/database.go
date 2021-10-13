@@ -40,7 +40,6 @@ func ConnectToDatabase(dbName string) (*sql.DB, error) {
 }
 
 func CreateDatabase(dbName string, db *sql.DB) error {
-
 	query := "CREATE DATABASE IF NOT EXISTS " + dbName
 	_, err := db.Exec(query)
 	if err != nil {
