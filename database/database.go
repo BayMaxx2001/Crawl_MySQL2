@@ -2,9 +2,9 @@ package database
 
 import (
 	"crawl_data/config"
+	"crawl_data/crawl/model"
+	"crawl_data/crawl/utils"
 	"crawl_data/database/entities"
-	"crawl_data/model"
-	"crawl_data/utils"
 	"database/sql"
 	"fmt"
 	"log"

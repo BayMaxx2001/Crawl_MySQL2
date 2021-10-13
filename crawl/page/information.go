@@ -2,11 +2,10 @@ package page
 
 import (
 	"bufio"
+	"crawl_data/crawl/model"
+	"crawl_data/crawl/utils"
 	"log"
 	"strings"
-
-	"crawl_data/model"
-	"crawl_data/utils"
 )
 
 func GetInformationOfDate(dayURL string) ([]model.PageInformation, error) {

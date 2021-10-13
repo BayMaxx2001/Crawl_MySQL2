@@ -2,11 +2,10 @@ package main
 
 import (
 	"crawl_data/config"
+	"crawl_data/crawl/model"
+	"crawl_data/crawl/page"
+	"crawl_data/crawl/utils"
 	"crawl_data/database"
-	"crawl_data/model"
-	"crawl_data/page"
-	"crawl_data/utils"
-
 	"database/sql"
 	"log"
 	"sync"
