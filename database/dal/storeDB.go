@@ -18,7 +18,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "MD5", id+1, infor.MD5)
 			if err := InsertStorageInforTbl(newRow, db); err != nil {
-				log.Println("Error insert MD5 at SaveToDatabase of database/dal/database.go ", err)
+				log.Println("Error insert MD5 at SaveToDatabase of database/dal/storeDB.go ", err)
 			}
 		}
 	}
@@ -29,7 +29,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "SHA1", id+1, infor.SHA1)
 			if err := InsertStorageInforTbl(newRow, db); err != nil {
-				log.Println("Error insert SHA1 at SaveToDatabase of database/dal/database.go ", err)
+				log.Println("Error insert SHA1 at SaveToDatabase of database/dal/storeDB.go ", err)
 			}
 		}
 	}
@@ -40,7 +40,7 @@ func SaveToDatabase(date string, format string, content []model.PageInformation,
 			}
 			var newRow = entities.NewInfor(date, "SHA256", id+1, infor.SHA256)
 			if err := InsertStorageInforTbl(newRow, db); err != nil {
-				log.Println("Error insert SHA256 at SaveToDatabase of database/dal/database.go ", err)
+				log.Println("Error insert SHA256 at SaveToDatabase of database/dal/storeDB.go ", err)
 			}
 		}
 	}

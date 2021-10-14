@@ -26,7 +26,7 @@ func ConnectToDatabase(dbName string) (*sql.DB, error) {
 	DSN := DSN(dbName)
 	db, err := sql.Open("mysql", DSN)
 	if err != nil {
-		log.Println("Error at ConnectToDatabase of database/dal/database.go ", err)
+		log.Println("Error at ConnectToDatabase of database/dal/setupDB.go ", err)
 		return db, err
 	}
 
@@ -40,7 +40,7 @@ func CreateDatabase(dbName string, db *sql.DB) error {
 	query := "CREATE DATABASE IF NOT EXISTS " + dbName
 	_, err := db.Exec(query)
 	if err != nil {
-		log.Println("Error at CreateDatabase of database/dal/database.go ", err)
+		log.Println("Error at CreateDatabase of database/dal/setupDB.go ", err)
 		return err
 	}
 	return err
