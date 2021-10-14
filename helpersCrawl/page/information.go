@@ -2,8 +2,8 @@ package page
 
 import (
 	"bufio"
-	"crawl_data/helpers/model"
-	"crawl_data/helpers/utils"
+	"crawl_data/helpersCrawl/model"
+	"crawl_data/helpersCrawl/utils"
 	"log"
 	"strings"
 )

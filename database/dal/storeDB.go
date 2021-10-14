@@ -2,8 +2,8 @@ package dal
 
 import (
 	"crawl_data/database/entities"
-	"crawl_data/helpers/model"
-	"crawl_data/helpers/utils"
+	"crawl_data/helpersCrawl/model"
+	"crawl_data/helpersCrawl/utils"
 	"database/sql"
 	"log"
 )

@@ -3,7 +3,7 @@ package dal
 import (
 	"crawl_data/config"
 	"crawl_data/database/entities"
-	"crawl_data/helpers/utils"
+	"crawl_data/helpersCrawl/utils"
 	"database/sql"
 	"log"
 )
@@ -143,4 +143,46 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 		lsDateAndType = append(lsDateAndType, DateAndType{date, typeOfHash})
 	}
 	return lsDateAndType, nil
+}
+
+func ExecQueryDatabase(query string, db *sql.DB) error {
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Println("Error at ExecQueryDatabase of database/dal/database.go ", err)
+		return err
+	}
+	return err
+}
+
+func InsertStorageInforTbl(infor entities.StorageInforTbl, db *sql.DB) error {
+	// prepare
+	query := `
+		INSERT INTO StorageInfor(Date, Type, LineID, HashCode) 
+		VALUES (?, ?, ?, ?)
+	`
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Println("Error at InsertStorageInforTbl of database/dal/database.go when prepare statement ", err)
+		return err
+	}
+	defer stmt.Close()
+
+	if _, err := stmt.Exec(infor.Date, infor.Type, infor.LineID, infor.HashCode); err != nil {
+		log.Println("Error at InsertStorageInforTbl of database/dal/database.go when execute", err)
+		return err
+	}
+
+	log.Println("Insert " + infor.Date + " into InsertStorageInforTbl successfully.")
+	return err
+}
+
+func IsExist(date string, hashCode string, db *sql.DB) bool {
+	info, err := SelectByDateAndInfor(date, hashCode, db)
+	if err != nil {
+		log.Println("Error IsExist of database/database.go", err)
+	}
+	if len(info) != 0 {
+		return (info[0].Date != "" && info[0].HashCode != "")
+	}
+	return false
 }

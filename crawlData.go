@@ -3,9 +3,9 @@ package main
 import (
 	"crawl_data/config"
 	"crawl_data/database/dal"
-	"crawl_data/helpers/model"
-	"crawl_data/helpers/page"
-	"crawl_data/helpers/utils"
+	"crawl_data/helpersCrawl/model"
+	"crawl_data/helpersCrawl/page"
+	"crawl_data/helpersCrawl/utils"
 	"database/sql"
 	"log"
 	"sync"
