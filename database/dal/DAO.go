@@ -31,6 +31,15 @@ func GetRowSelect(res *sql.Rows) ([]entities.StorageInforTbl, error) {
 	return lsInforReturn, nil
 }
 
+func ExecQueryDatabase(query string, db *sql.DB) error {
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Println("Error at ExecQueryDatabase of database/dal/database.go ", err)
+		return err
+	}
+	return err
+}
+
 func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.StorageInforTbl, error) {
 	var (
 		lsInforReturn []entities.StorageInforTbl
@@ -143,15 +152,6 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 		lsDateAndType = append(lsDateAndType, DateAndType{date, typeOfHash})
 	}
 	return lsDateAndType, nil
-}
-
-func ExecQueryDatabase(query string, db *sql.DB) error {
-	_, err := db.Exec(query)
-	if err != nil {
-		log.Println("Error at ExecQueryDatabase of database/dal/database.go ", err)
-		return err
-	}
-	return err
 }
 
 func InsertStorageInforTbl(infor entities.StorageInforTbl, db *sql.DB) error {
