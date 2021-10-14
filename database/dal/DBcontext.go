@@ -3,8 +3,6 @@ package dal
 import (
 	"crawl_data/config"
 	"crawl_data/database/entities"
-	"crawl_data/helpers/model"
-	"crawl_data/helpers/utils"
 	"database/sql"
 	"fmt"
 	"log"
@@ -48,7 +46,6 @@ func CreateDatabase(dbName string, db *sql.DB) error {
 	}
 	return err
 }
-
 func CreateTable(tableName string, db *sql.DB) error {
 	queryInforTbl := `
 	CREATE TABLE IF NOT EXISTS StorageInfor (
@@ -72,10 +69,10 @@ func ExecQueryDatabase(query string, db *sql.DB) error {
 	return err
 }
 
-func InsertStorageInforTbl(dbName string, infor entities.StorageInforTbl, db *sql.DB) error {
+func InsertStorageInforTbl(infor entities.StorageInforTbl, db *sql.DB) error {
 	// prepare
 	query := `
-		INSERT INTO ` + dbName + `.StorageInfor(Date, Type, LineID, HashCode) 
+		INSERT INTO StorageInfor(Date, Type, LineID, HashCode) 
 		VALUES (?, ?, ?, ?)
 	`
 	stmt, err := db.Prepare(query)
@@ -103,42 +100,4 @@ func IsExist(date string, hashCode string, db *sql.DB) bool {
 		return (info[0].Date != "" && info[0].HashCode != "")
 	}
 	return false
-}
-
-func SaveToDatabase(date string, format string, content []model.PageInformation, dbName string, db *sql.DB) {
-	year, month, day := utils.GetDateDetail(date)
-	date = year + "-" + month + "-" + day
-	if format == "MD5" {
-		for id, infor := range content {
-			if IsExist(date, infor.MD5, db) || infor.MD5 == "" {
-				continue
-			}
-			var newRow = entities.NewInfor(date, "MD5", id+1, infor.MD5)
-			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert MD5 at SaveToDatabase of database/dal/database.go ", err)
-			}
-		}
-	}
-	if format == "SHA1" {
-		for id, infor := range content {
-			if IsExist(date, infor.SHA1, db) || infor.SHA1 == "" {
-				continue
-			}
-			var newRow = entities.NewInfor(date, "SHA1", id+1, infor.SHA1)
-			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert SHA1 at SaveToDatabase of database/dal/database.go ", err)
-			}
-		}
-	}
-	if format == "SHA256" {
-		for id, infor := range content {
-			if IsExist(date, infor.SHA256, db) || infor.SHA256 == "" {
-				continue
-			}
-			var newRow = entities.NewInfor(date, "SHA256", id+1, infor.SHA256)
-			if err := InsertStorageInforTbl(dbName, newRow, db); err != nil {
-				log.Println("Error insert SHA256 at SaveToDatabase of database/dal/database.go ", err)
-			}
-		}
-	}
 }

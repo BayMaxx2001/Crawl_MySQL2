@@ -33,7 +33,6 @@ func GetRowSelect(res *sql.Rows) ([]entities.StorageInforTbl, error) {
 
 func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.StorageInforTbl, error) {
 	var (
-		dbName        = config.GetConfig().DB_NAME
 		lsInforReturn []entities.StorageInforTbl
 	)
 	year, month, day := utils.GetDateDetail(date)
@@ -41,7 +40,7 @@ func SelectByDateAndInfor(date string, hashCode string, db *sql.DB) ([]entities.
 
 	query := `
 		SELECT *
-		FROM ` + dbName + `.StorageInfor st
+		FROM StorageInfor st
 		WHERE st.Date = ? AND st.HashCode= ?
 	`
 	//log.Println(query)
@@ -71,7 +70,7 @@ func SelectByDateDB(date string) ([]entities.StorageInforTbl, error) {
 
 	query := `
 		SELECT *
-		FROM ` + dbName + `.StorageInfor st
+		FROM StorageInfor st
 		WHERE st.Date = ?
 	`
 	//log.Println(query)
@@ -99,7 +98,7 @@ func GetStatisticsADayDB(date string) (int, error) {
 	}
 	query := `
 		SELECT count(*) as num
-		FROM ` + dbName + `.StorageInfor st
+		FROM StorageInfor st
 		WHERE st.Date = ?
 	`
 
@@ -123,7 +122,7 @@ func SelectByHashCodeDB(hashCode string) ([]DateAndType, error) {
 	}
 	query := `
 		SELECT Date , Type
-		FROM ` + dbName + `.StorageInfor st
+		FROM StorageInfor st
 		WHERE st.HashCode= ?
 	`
 	res, err := db.Query(query, hashCode)
